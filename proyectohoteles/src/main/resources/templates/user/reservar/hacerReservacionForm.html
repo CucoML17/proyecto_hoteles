@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacer Reservación</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/indexcss.css}">
+    <link rel="stylesheet" th:href="@{/css/indecssbody.css}">
+    <link rel="stylesheet" th:href="@{/css/cssHoteles.css}">
+
+	<style>
+	    /* ... otros estilos ... */
+	    .profile-img-lg {
+	        max-width: 90px; /* Ajusta este valor según el tamaño máximo deseado */
+	        max-height: 100px; /* Ajusta este valor según el tamaño máximo deseado */
+	        object-fit: contain; /* Asegura que la imagen se ajuste dentro del contenedor sin recortarse, manteniendo su aspecto */
+	    }
+	</style>
+</head>
+<body>
+
+    <div th:insert="user/fragment/headertop :: cabecera-top" class="top-navbar bg-black text-white py-2">
+
+    </div>
+
+    <nav th:insert="user/fragment/headerbottom :: cabecera-bottom" class="navbar navbar-expand-lg navbar-light bg-light sticky-top ">
+
+    </nav>
+
+
+    <div class="container mt-5">
+    
+      	<div th:if="${error}" class="alert alert-danger" role="alert">
+		    <span th:text="${error}"></span>
+		</div>        
+
+
+        <div class="container mt-5" style="max-width: 700px; margin: 0 auto;">
+            <h2 class="text-center mb-4" th:text="${accion}">Hacer Reservación</h2>
+
+            <div class="mb-3 d-flex align-items-center">
+                <label class="form-label me-2">Nombre del hotel:</label>
+                <div class="d-flex align-items-center">
+                    <input type="text" class="form-control me-2" th:value="${hotel.nombre}" readonly>
+                    <a  th:if="${act == 1}"  th:href="@{/user/reservar/selecHotel/{idReserva}(idReserva=${idReserva})}" class="btn btn-primary">Cambiar hotel</a>
+                    <img  th:src="@{'/imagenes/hoteles/' + ${hotel.fotoHotel}}" class="rounded-circle profile-img-lg" alt="Hotel">
+                </div>
+            </div>
+
+            <div class="mb-3 d-flex align-items-center">
+                <label class="form-label me-2">Habitación número:</label>
+                <div class="d-flex align-items-center">
+                    <input type="text" class="form-control me-2" th:value="${habitacion.numeroHabitacion}"  readonly>
+                    <a  th:if="${act == 1}"  
+                    th:href="@{/user/reservar/selecHabitacion/{idHotel}/{idReserva}(idHotel=${hotel.id}, idReserva=${idReserva})}" 
+                    class="btn btn-primary">Cambiar habitación</a>
+                    <img th:src="@{'/imagenes/habitaciones/' + ${habitacion.fotoHabitacion}}" class="rounded-circle profile-img-lg" alt="Habitación">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label me-2">Precio por noche:</label>
+                <input type="text" class="form-control w-25 d-inline-block" th:value="${habitacion.precioNoche}" readonly>
+            </div>
+
+            <form class="reservation-form" method="post" th:action="@{/user/reservar/guardarReserva}" th:object="${reserva}">
+
+                <input type="hidden" id="id" th:field="*{id}">
+
+                <input type="hidden" id="idHabi" th:value="${habitacion.id}" name="idHabitacionReservado">
+                <input type="hidden" id="idHote" th:value="${hotel.id}" name="idHotelReservado">
+
+                <input type="hidden" id="actuar" name="act" th:value="${act}">
+                <input type="hidden" class="form-control" name="idReserva" th:value="${idReserva}">
+
+
+                <div class="mb-3">
+                    <label class="form-label">Fecha de ocupación:</label>
+                    <input type="date" class="form-control" style="max-width: 500px;" th:field="*{fechainicio}" required>
+                </div>
+
+                <br>
+
+				<div class="mb-3 d-flex align-items-center">
+				    <label class="form-label me-2" style="min-width: 150px;">Cantidad de días:</label>
+				    <button type="button" class="btn btn-outline-secondary btn-sm me-2" onclick="cambiarDias(-1)">-</button>
+				    <input type="number" class="form-control me-2" name="cantidadDias" id="cantidadDias" th:value="${cantDias}" min="1" max="15" style="width: 70px;">
+				    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="cambiarDias(1)">+</button>
+					<label class="form-label ms-3 me-2">Ocupantes:</label>
+				    <select class="form-select" style="max-width: 100px;" th:field="*{numeroOcupantes}">
+				        <option th:each="i : ${#numbers.sequence(1, habitacion.capacidad)}" th:value="${i}" th:text="${i}"></option>
+				    </select>
+				</div>
+
+                <br>
+
+                <div class="mb-3">
+                    <label class="form-label">Detalles:</label>
+                    <textarea class="form-control" rows="3" th:field="*{detalles}"></textarea>
+                </div>
+
+
+                <div class="text-center mt-4">
+                    <label class="form-label me-2">Total de la reserva:</label>
+                    <input type="text" class="form-control w-25 d-inline-block" id="precioTotalReserva" th:value="${habitacion.precioNoche}" th:field="*{precioTotal}" readonly>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-success">Reservar</button>
+                </div>
+            </form>
+        </div>
+
+
+        <footer class="bg-dark text-white text-center py-3 mt-5">
+            <p>&copy; 2024 Cuco Corp. Todos los derechos reservados.</p>
+        </footer>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+        <script src="https://kit.fontawesome.com/13c51e858e.js" crossorigin="anonymous"></script>
+
+		<script th:inline="javascript">
+		    const precioNoche = [[${habitacion.precioNoche}]];
+		    const cantidadDiasInput = document.getElementById('cantidadDias');
+		    const precioTotalInput = document.getElementById('precioTotalReserva');
+
+		    function actualizarPrecioTotal() {
+		        let dias = parseInt(cantidadDiasInput.value);
+		        if (isNaN(dias) || dias < 1) {
+		            cantidadDiasInput.value = 1;
+		            dias = 1;
+		        } else if (dias > 15) {
+		            cantidadDiasInput.value = 15;
+		            dias = 15;
+		        }
+		        precioTotalInput.value = precioNoche * dias;
+		    }
+
+		    cantidadDiasInput.addEventListener('input', actualizarPrecioTotal);
+
+		    function cambiarDias(delta) {
+		        let diasActuales = parseInt(cantidadDiasInput.value);
+		        let nuevosDias = diasActuales + delta;
+		        if (nuevosDias >= 1 && nuevosDias <= 15) {
+		            cantidadDiasInput.value = nuevosDias;
+		            actualizarPrecioTotal();
+		        }
+		    }
+
+		    // Establecer el precio inicial al cargar la página
+		    document.addEventListener('DOMContentLoaded', actualizarPrecioTotal);
+		</script>
+</body>
+</html>

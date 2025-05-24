@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de habitaciones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/indexcss.css}"> 
+    <link rel="stylesheet" th:href="@{/css/indecssbody.css}"> 
+    <link rel="stylesheet" th:href="@{/css/cssAdmin.css}"> 
+    <link rel="stylesheet" th:href="@{/css/cssHoteles.css}">
+</head>
+
+<body>
+
+    <div th:insert="admin/fragment/headertop :: admin-cabecera-top" class="top-navbar bg-black text-white py-2">
+
+    </div>
+
+    <nav th:insert="admin/fragment/headerbottom :: admin-cabecera-bottom" class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  
+    </nav>
+
+
+    <div th:insert="admin/fragment/hotelessub :: sub-hoteles" class="admin-subheader">
+
+    </div>
+
+
+    <div class="container mt-4">
+        <!-- Un modelo llamada tituloLista -->
+        <h2 class="text-center" th:text="${tituloLista}"></h2> 
+
+		<form  method="post" th:action="@{/habitacion/admin/buscarListaHabitaciones}">
+		
+		<input type="hidden" class="form-control me-2" placeholder="Número de habitación" name="idHotelPertenece" th:value="${hotel.id}">
+		
+        <div class="d-flex justify-content-center">
+            <div style="max-width: 600px; width: 100%;">
+                <div class="mb-3 d-flex align-items-center">
+                    <label class="form-label me-2">Número de habitación:</label>
+                    <input type="number" class="form-control me-2" placeholder="Número de habitación" name="numeroHabitacion">
+                </div>
+
+                <div class="mb-3 d-flex align-items-center">
+                    <label class="form-label me-2">Tipo de habitación:</label>
+                    <select class="form-select" id="tipoHabitacionFilter" name="tipoHabitacion">
+                        <option value="">Sin filtro</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Doble">Doble</option>
+                        <option value="Suite">Suite</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Filtrar por precio:</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="precioFilterCheckbox" name="filtrarPrecio">
+                        <label class="form-check-label" for="precioFilterCheckbox">Activar filtro</label>
+                    </div>
+                    <div id="precioRange" style="display: none;">
+                        <div class="d-flex align-items-center">
+                            <input type="number" class="form-control me-2" placeholder="Min:" name="minPrecio">
+                            <input type="number" class="form-control" placeholder="Max:" name="maxPrecio">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 d-flex align-items-center">
+                    <label class="form-label me-2">Capacidad:</label>
+                    <select class="form-select" id="capacidadFilter" name="capacidad">
+                        <option value="">Sin filtro</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                    </select>
+                </div>
+
+                <div class="mb-3 d-flex align-items-center">
+                    <label class="form-label me-2">Ordenar por:</label>
+                    <select class="form-select me-2" name="ordenCampo">
+                        <option value="">Sin ordenar</option>
+                        <option value="numeroHabitacion">Número</option>
+                        <option value="tipoHabitacion">Tipo</option>
+                        <option value="precioNoche">Precio</option>
+                        <option value="capacidad">Capacidad</option>
+                    </select>
+                    <select class="form-select" name="ordenDireccion">
+                        <option value="asc">Ascendente</option>
+                        <option value="desc">Descendente</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </div>
+        </div>
+
+		</form>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a th:href="@{/habitacion/admin/agregarHabitacion/{idHotel}(idHotel=${hotel.id})}"  class="btn btn-primary">Agregar habitación</a>
+        </div>
+
+        <div th:if="${mensajeExito}" class="alert alert-success" role="alert">
+		    <span th:text="${mensajeExito}"></span>
+		</div>
+		
+        <div th:if="${mensajeFiltro}" class="alert alert-success" role="alert">
+		    <span th:text="${mensajeFiltro}"></span>
+		</div>		
+			
+		<div th:if="${mensajeExitoBorra}" class="alert alert-warning" role="alert">
+		    <span th:text="${mensajeExitoBorra}"></span>
+		</div>        
+
+
+
+
+        <table class="table hotel-table">
+            <thead class="hotel-thead">
+                <tr>
+                    <th>Número de habitación</th>
+                    <th>Foto</th>
+                    <th>Tipo de habitación</th>
+                    <th>Precio</th>
+                    <th>Estado</th>
+                    <th>Capacidad</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Modelo listaHabitaciones -->
+                <tr th:each = "habitacion : ${listaHabitaciones}">
+                    <td th:text="${habitacion.numeroHabitacion}">101</td>
+					<td>
+                        <!--<img th:src="@{/images/{imgtmp} (imgtmp=${producto.imagen})}" style="height: 100px; width: 100px; margin-right: 15px;"-->
+                        <img th:src="@{'/imagenes/habitaciones/' + ${habitacion.fotoHabitacion}}" style="height: 100px; width: 100px; margin-right: 15px;">
+                    </td> 
+
+
+                    <td th:text="${habitacion.tipoHabitacion}">Normal</td>
+                    <td th:text="'$'+ ${habitacion.precioNoche}">$100</td>
+
+					<td th:if="${habitacion.estado == 1}"><a 
+					th:href="@{/habitacion/admin/cambiarEstado/{idHotel}/{idHabitacion}(idHotel=${hotel.id}, idHabitacion=${habitacion.id})}" type="button" class="btn btn-success">Disponible</a></td>
+					<td th:unless="${habitacion.estado == 1}"><a
+					th:href="@{/habitacion/admin/cambiarEstado/{idHotel}/{idHabitacion}(idHotel=${hotel.id}, idHabitacion=${habitacion.id})}" type="button" class="btn btn-danger">No Disponible</a></td>                       
+                    
+
+
+                    <td th:text="${habitacion.capacidad}">2</td>
+                    <td>
+                        
+                        <a th:href="@{/habitacion/admin/verMas/{id}(id=${habitacion.id})}"  class="btn btn-sm btn-primary">Ver</a>
+                        
+                        <a th:href="@{/habitacion/admin/editar/{idHotel}/{idHabitacion}(idHotel=${hotel.id}, idHabitacion=${habitacion.id})}" class="btn btn-sm btn-warning">Editar</a>
+                    </td>
+                </tr>
+  
+            </tbody>
+        </table>
+    </div>
+
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 Cuco Corp. Todos los derechos reservados.</p>
+    </footer>
+
+
+    <script>
+
+        window.addEventListener('scroll', function() {
+            const navbarHeight = document.querySelector('.navbar').offsetHeight;
+            document.querySelector('.admin-subheader').style.top = navbarHeight + 'px';
+        });        
+    </script>    
+
+    <script>
+        document.getElementById('precioFilterCheckbox').addEventListener('change', function() {
+            document.getElementById('precioRange').style.display = this.checked ? 'block' : 'none';
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/13c51e858e.js" crossorigin="anonymous"></script>
+</body>
+</html>

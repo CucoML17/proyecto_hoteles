@@ -1,0 +1,61 @@
+.admin-subheader {
+    background-color: #f0f0f0; /* Color de fondo para la subbarra */
+    padding: 10px 0;
+}
+
+.admin-button {
+    background-color: #f0db9c; /* Color gris por defecto */
+    border: none;
+    color: #333;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 5px;
+}
+
+.admin-button:hover {
+    background-color: #ffc36f; /* Color gris más oscuro al pasar el ratón */
+}
+
+
+.admin-subheader {
+    background-color: #dadada;
+    padding: 10px 0;
+    position: sticky;
+    top: 60px; /* Ajusta este valor según la altura de tu navbar */
+    z-index: 100; /* Asegura que esté por encima de otros elementos */
+}
+
+.estado-select {
+    max-width: 250px; /* Ajusta el ancho según necesites */
+}
+
+.custom-input-group .form-select {
+    width: auto; /* Permite que el ancho se ajuste al contenido */
+    flex: 1; /* Permite que los elementos se expandan y ocupen el espacio disponible */
+    margin-right: 5px; /* Añade un pequeño margen entre los elementos */
+}
+
+.custom-input-group #orderType {
+    width: auto; /* Permite que el ancho se ajuste al contenido */
+    flex: 0 1 150px; /* Ancho base de 150px, permite que se expanda o contraiga */
+    margin-right: 5px;
+}
+
+.custom-input-group #estadoFilter .form-select {
+    width: auto;
+    flex: 0 1 150px; /* Ancho base de 150px, permite que se expanda o contraiga */
+}
+
+.custom-input-group #priceRange {
+    flex: 2; /* Permite que el rango de precios ocupe más espacio */
+}
+
+.custom-input-group .btn-outline-primary {
+    flex: 0 0 auto; /* No permite que el botón se expanda */
+    margin-right: 5px;
+}
+
+.hotel-thead{
+    background-color: #333;
+
+}

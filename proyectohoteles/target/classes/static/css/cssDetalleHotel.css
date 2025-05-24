@@ -1,0 +1,50 @@
+.hotel-image {
+    max-height: 300px; /* Ajusta la altura máxima de la imagen */
+}
+
+.star {
+    font-size: 1.2em;
+}
+
+.yellow-star {
+    color: gold;
+}
+
+.gray-star {
+    color: gray;
+}
+
+.carddetah{
+
+    max-width: 800px; /* Ajusta el ancho en píxeles */
+    margin: 0 auto; /* Centra el elemento horizontalmente */
+}
+
+.hotel-image img {
+    height: 100%; /* La imagen ocupa toda la altura del contenedor */
+    object-fit: cover; /* La imagen se ajusta al contenedor sin deformarse */
+}
+
+
+
+.custom-select-input {
+    max-width: 200px; /* Aumenta el ancho de los select e inputs */
+    font-size: 1rem; /* Aumenta el tamaño de la fuente */
+    padding: 0.5rem 1rem; /* Aumenta el padding */
+    margin-right: 10px; /* Añade margen derecho para espaciado */
+}
+
+.d-flex.align-items-center label {
+    min-width: 250px; /* Asegura que los labels tengan un ancho mínimo */
+}
+
+
+.room-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.room-image img {
+    height: 100%;
+    object-fit: cover;
+}

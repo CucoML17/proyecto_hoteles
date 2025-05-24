@@ -1,0 +1,9 @@
+    <div th:fragment = "sub-reserva" class="admin-subheader">
+        <div class="container">
+            <div class="d-flex justify-content-center">
+                <a th:href="@{/reserva/admin/listaReserva}" class="admin-button">Lista de reservas</a>
+                <a th:href="@{/reserva/admin/selecHotel/{idReserva}(idReserva=0)}" class="admin-button">Historial de habitación</a>
+                <a th:href="@{/reserva/admin/atenderReservaMostrar}" class="admin-button">Atender reserva</a>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de reservas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/indexcss.css}">
+    <link rel="stylesheet" th:href="@{/css/indecssbody.css}"> 
+    <link rel="stylesheet" th:href="@{css/csshistorialreservas.css}">
+    
+	<style>
+	    #priceFilter, #dateFilter {
+	        display: none; /* Mantiene la visibilidad controlada por el script */
+	        flex-direction: column; /* Alinea los elementos verticalmente */
+	        margin-top: 10px; /* Añade un espacio superior */
+	    }
+	
+	    #priceFilter label, #dateFilter label {
+	        margin-bottom: 5px; /* Espacio debajo de la etiqueta */
+	        display: block; /* Hace que la etiqueta ocupe toda la línea */
+	    }
+	
+	    #priceFilter .d-flex, #dateFilter .d-flex {
+	        display: flex; /* Asegura que los inputs estén en la misma línea */
+	        align-items: center; /* Alinea verticalmente los elementos dentro del div */
+	        margin-top: 5px; /* Espacio entre la etiqueta y los inputs */
+	    }
+	
+	    #priceFilter .d-flex input, #priceFilter .d-flex select,
+	    #dateFilter .d-flex input, #dateFilter .d-flex select {
+	        margin-right: 5px; /* Espacio entre los inputs y el select */
+	    }
+	</style>
+</head>
+<body>
+
+    <div th:insert="user/fragment/headertop :: cabecera-top" class="top-navbar bg-black text-white py-2">
+
+    </div>
+
+    <nav th:insert="user/fragment/headerbottom :: cabecera-bottom" class="navbar navbar-expand-lg navbar-light bg-light sticky-top ">
+
+    </nav>
+
+
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Tus reservaciones <span th:text="${cliente.nombre}"></span></h2>
+
+		<form th:action="@{/user/reservar/filtrarHistorialReservas}" method="post" class="filter-form">
+        <div class="filter-section mb-4" id="buscadorC">
+        	<input type="hidden" id="actuar" name="tipoHistorial" th:value="${tipoHistorial}">
+
+            <div class="d-flex align-items-center mb-2">
+                <select class="form-select me-2" id="filterType" name="filterType">
+                    
+                    <option value="hotel" selected>Hotel</option>
+                    <option value="habitacion">Número de habitación</option>
+                    <option value="precio">Precio</option>
+                    <option value="fecha">Fecha</option>
+                    <option value="codigo">Código de reserva</option>
+                </select>
+                <input type="text" class="form-control me-2" id="hotelFilterInput" name="hotel" placeholder="Nombre del hotel" th:style="${filterType != 'hotel' ? 'display: none;' : ''}">
+                <input type="number" class="form-control me-2" id="habitacionFilterInput" name="numeroHabitacion" placeholder="Número de habitación" th:style="${filterType != 'habitacion' ? 'display: none;' : ''}">
+            </div>
+            <div id="priceFilter" th:style="${filterType != 'precio' ? 'display: none;' : ''}">
+                <label class="form-label me-2">Rango de precio:</label>
+                <div class="d-flex align-items-center">
+                    <input type="number" class="form-control me-2" id="priceMin" name="precioMinimo" placeholder="Min">
+                    <input type="number" class="form-control me-2" id="priceMax" name="precioMaximo" placeholder="Max">
+                    <select class="form-select" name="ordenPrecio">
+                        <option value="">Ordenar por precio</option>
+                        <option value="asc">Ascendente</option>
+                        <option value="desc">Descendente</option>
+                    </select>
+                </div>
+            </div>
+            <div id="dateFilter" th:style="${filterType != 'fecha' ? 'display: none;' : ''}">
+                <label class="form-label me-2">Rango de fecha:</label>
+                <div class="d-flex align-items-center">
+                    <input type="date" class="form-control me-2" id="dateMin" name="fechaInicio">
+                    <input type="date" class="form-control me-2" id="dateMax" name="fechaFin">
+                    <select class="form-select" name="ordenFecha">
+                        <option value="">Ordenar por fecha</option>
+                        <option value="asc">Ascendente</option>
+                        <option value="desc">Descendente</option>
+                    </select>
+                </div>
+            </div>
+            <input type="text" class="form-control me-2" id="codigoFilterInput" name="codigoReserva" placeholder="Código de reserva" th:style="${filterType != 'codigo' ? 'display: none;' : ''}">
+            <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-filter"></i> Filtrar</button>
+        </div>
+        </form>
+        
+ 		<a th:href="@{/user/reservar/limpiar/{tipoHistorial}(tipoHistorial=${tipoHistorial})}" class="btn btn-primary mt-2"> Quitar filtros</a>        
+
+        <div th:if="${mensajeFiltro}" class="alert alert-info mt-3" role="alert">
+            <p th:text="${mensajeFiltro}"></p>
+        </div>
+        
+        <table class="table">
+            <thead class="custom-thead">
+                <tr>
+                    <th>Número de reserva</th>
+                    <th>Fecha</th>
+                    <th>Hotel</th>
+                    <th>Habitación</th>
+                    <th>Total $</th>
+                    <th>Estado</th>
+                    <th>Recepcionista que atendió</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each = "reserva : ${reservas}">
+                    <td th:text="${reserva.codigoReserva}">12345</td>
+                    <td th:text="${#dates.format(reserva.fechainicio, 'dd-MM-yyyy')}">2024-06-15</td>
+                    <td th:text="${reserva.idReservaHabitacion.idHotelHabitacion.nombre}">Hotel Ejemplo</td>
+                    <td th:text="${reserva.idReservaHabitacion.numeroHabitacion}">101</td>
+                    <td th:text="'$' + ${#numbers.formatDecimal(reserva.precioTotal, 1, 2)}"> </td>
+                    <td th:text="${reserva.estado}">Confirmada</td>
+                    <td th:if="${reserva.idReservaEmpleado == null}">No antendido</td>
+                    <td th:unless="${reserva.idReservaEmpleado == null}" th:text="${reserva.idReservaEmpleado.nombre} + ' ' + ${reserva.idReservaEmpleado.apellido}"></td>
+
+                    <td><a th:href="@{/user/reservar/detalleReserva/{tipoHistorial}/{idReserva}(tipoHistorial=${tipoHistorial}, idReserva=${reserva.id})}" class="btn btn-primary btn-sm">Ver</a></td>
+                </tr>
+
+            </tbody>
+        </table>        
+    </div>
+
+
+
+
+    
+
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 Cuco Corp. Todos los derechos reservados.</p>
+    </footer>
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/13c51e858e.js" crossorigin="anonymous"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const filterTypeSelect = document.getElementById('filterType');
+                const hotelFilterInput = document.getElementById('hotelFilterInput');
+                const habitacionFilterInput = document.getElementById('habitacionFilterInput');
+                const priceFilterDiv = document.getElementById('priceFilter');
+                const dateFilterDiv = document.getElementById('dateFilter');
+                const codigoFilterInput = document.getElementById('codigoFilterInput');
+
+                function actualizarVisibilidadFiltros() {
+                    hotelFilterInput.style.display = 'none';
+                    habitacionFilterInput.style.display = 'none';
+                    priceFilterDiv.style.display = 'none';
+                    dateFilterDiv.style.display = 'none';
+                    codigoFilterInput.style.display = 'none';
+
+                    if (filterTypeSelect.value === 'hotel') {
+                        hotelFilterInput.style.display = 'block';
+                    } else if (filterTypeSelect.value === 'habitacion') {
+                        habitacionFilterInput.style.display = 'block';
+                    } else if (filterTypeSelect.value === 'precio') {
+                        priceFilterDiv.style.display = 'block';
+                    } else if (filterTypeSelect.value === 'fecha') {
+                        dateFilterDiv.style.display = 'block';
+                    } else if (filterTypeSelect.value === 'codigo') {
+                        codigoFilterInput.style.display = 'block';
+                    }
+                }
+
+                filterTypeSelect.addEventListener('change', actualizarVisibilidadFiltros);
+
+                // Simular un evento 'change' al cargar la página para mostrar el input de hotel
+                actualizarVisibilidadFiltros();
+            });
+        </script>
+</body>
+</html>

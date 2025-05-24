@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil del Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" th:href="@{/css/indexcss.css}">
+    <link rel="stylesheet" th:href="@{/css/indecssbody.css}">
+    <link rel="stylesheet" th:href="@{/css/cssHoteles.css}"> 
+
+    <style>
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto;
+        }
+        .profile-details {
+            padding-left: 20px;
+        }
+        .profile-section {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            max-width: 800px; /* Reducir el ancho máximo */
+            margin: 20px auto; /* Centrar el div */
+        }
+        .profile-section .left-section {
+            width: 40%; /* Aumentar el ancho del lado izquierdo */
+            text-align: center; /* Centrar el contenido */
+        }
+        .profile-section .right-section {
+            width: 60%;
+        }
+        #fileInput {
+            display: none;
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-row .mb-3 {
+            width: 48%; /* Ajustar el ancho para que quepan dos inputs por fila */
+        }
+    </style>
+</head>
+<body>
+
+    <div th:insert="user/fragment/headertop :: cabecera-top" class="top-navbar bg-black text-white py-2">
+
+    </div>
+
+    <nav th:insert="user/fragment/headerbottom :: cabecera-bottom" class="navbar navbar-expand-lg navbar-light bg-light sticky-top ">
+
+    </nav>
+
+    <div class="container mt-5 notop">
+        <h2 class="text-center mb-4" th:text="${perfilDe}">Perfil del Usuario</h2>
+
+        <div class="profile-section">
+            <div class="left-section">
+                <img id="profileImage"  th:src="@{'/imagenes/clientes/' + ${cliente.fotoCliente}}" alt="Foto de Perfil" class="profile-image">
+                <br><br>
+
+            </div>
+            <div class="right-section profile-details">
+                <div class="form-row">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre"  th:value="${cliente.nombre}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellidos" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="apellidos" th:value="${cliente.apellido}" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefono" th:value="${cliente.telefono}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" th:value="${cliente.correo}" readonly>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="direccion" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="direccion"th:value="${cliente.direccion}" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label for="usuario" class="form-label">Usuario</label>
+                    <input type="text" class="form-control" th:value="${usuario.username}" readonly>
+                </div>
+                <!-- <button class="btn btn-primary">Cambiar contraseña</button> -->
+            </div>
+        </div>
+
+        <div class="text-center">
+            <a class="btn btn-success"  th:href="@{/cliente/user/editarPerfil}">Editar mis datos</a>
+            <!-- <button class="btn btn-danger">Anular registro de la página</button> -->
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 Cuco Corp. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/13c51e858e.js" crossorigin="anonymous"></script>
+
+    <script>
+        document.getElementById('changePhotoButton').addEventListener('click', function() {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', function(event) {
+            const input = event.target;
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        });
+    </script>
+</body>
+</html>

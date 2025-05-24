@@ -1,0 +1,26 @@
+.custom-input-group {
+    max-width: 700px; /* Ajusta el ancho en píxeles */
+    margin: 0 auto; /* Centra el elemento horizontalmente */
+}
+
+.card-img-top {
+    height: 200px; /* Ajusta la altura de la imagen */
+    object-fit: cover; /* Asegura que la imagen cubra el espacio */
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.star {
+    font-size: 1.2em;
+}
+
+.yellow-star {
+    color: gold;
+}
+
+.gray-star {
+    color: gray;
+}

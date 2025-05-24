@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Empleados</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/indexcss.css}">
+    <link rel="stylesheet" th:href="@{/css/indecssbody.css}">
+    <link rel="stylesheet" th:href="@{/css/cssAdmin.css}">
+    <link rel="stylesheet" th:href="@{/css/cssHoteles.css}">
+    <style>
+        .employee-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #imagePreview img {
+            max-width: 150px;
+            display: none;
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-row .mb-3 {
+            width: 48%; /* Ajusta el ancho para dar espacio entre los elementos */
+        }
+        .hotel-selector {
+            display: flex;
+            align-items: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div th:insert="admin/fragment/headertop :: admin-cabecera-top" class="top-navbar bg-black text-white py-2">
+
+    </div>
+
+    <nav th:insert="admin/fragment/headerbottom :: admin-cabecera-bottom" class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  
+    </nav>
+
+
+    <div th:insert="admin/fragment/empleadosub :: sub-empleados" class="admin-subheader">
+
+    </div>
+
+    <div class="container mt-4">
+        <h2 class="text-center" th:text="${accion}">Agregar Empleado</h2>
+
+        <div class="employee-form-container">
+
+            <div class="mb-3 hotel-selector">
+                <label for="nombreHotel" class="form-label">Hotel en el que va a trabajar</label>
+                <input type="text" class="form-control me-2" id="nombreHotel" th:value="${hotel.nombre}" readonly>
+               <!--  <a type="button" class="btn btn-secondary btn-sm" th:href="@{/empleado/admin/selecHotelEmpleado}">Elegir otro</a> -->
+            </div>
+
+      	<div th:if="${cambioHotel}" class="alert alert-success" role="alert">
+		    <span th:text="${cambioHotel}"></span>
+		</div>
+		
+		<div th:if="${errorUsername}" class="alert alert-danger">
+		    <p th:text="${errorUsername}"></p>
+		</div>		
+		
+            <form id="empleadoForm" method="post" th:action="@{/empleado/admin/guardarEmpleado}" th:object="${empleado}" enctype="multipart/form-data">
+
+                <div th:if="${#fields.hasErrors('*')}" class='alert alert-danger' role='alert'>
+                    Por favor corrija los siguientes errores:
+                    <ul>
+                        <li th:each="err : ${#fields.errors('*') }" th:text="${err}"/>
+                    </ul>
+                </div>
+                
+                
+                <input type="hidden" id="id" th:field="*{id}">
+
+                 
+				<input type="hidden" id="hotelAsignado2" name="hotelAsignado" th:value="${hotel.id}">
+
+				<input type="hidden" id="hotelAsignado2" name="act" th:value="${act}">
+				
+				
+				<input type="hidden" id="iduser" th:value="${usuario.id}" name="iduser">
+				
+                
+                <div class="form-row">
+                    <div class="mb-3">
+                        <label for="rfcEmpleado" class="form-label">RFC</label>
+                        <input type="text" class="form-control" id="rfcEmpleado" th:field="*{rfc}" name="rfc" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombreEmpleado" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreEmpleado" th:field="*{nombre}" name="nombre" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="mb-3">
+                        <label for="apellidosEmpleado" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="apellidosEmpleado" th:field="*{apellido}" name="apellido" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefonoEmpleado" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefonoEmpleado" th:field="*{telefono}" name="telefono" required>
+                    </div>
+                </div>
+                
+                
+                <!-- Parte para lo del usuario -->
+				<div class="form-row">
+                    <div class="mb-3">
+                        <label for="usuarioCliente" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="usuarioCliente" th:value="${usuario.username}" name="username" required>
+                    </div>
+                </div>
+
+                <div th:if="${act == 0}">
+                    <div class="form-row">
+                        <div class="mb-3">
+                            <label for="contrasenaCliente" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="contrasenaCliente" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmarContrasenaCliente" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="confirmarContrasenaCliente" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Fin Parte para lo del usuario -->               
+                
+                
+                
+                
+                
+
+                <div class="mb-3">
+                    <label for="correoEmpleado" class="form-label">Correo electrónico</label>
+                    <input type="email" class="form-control" id="correoEmpleado" th:field="*{correo}" name="correo" required>
+                </div>
+
+                <div class="mb-3 d-flex align-items-center">
+                    <div class="col-md-6">
+                        <label for="imagenFile" class="form-label">Foto del empleado</label>
+                        <input type="file" class="form-control" id="imagenFile" name="imagenFile" accept="image/*"
+                               onchange="previewImage(event)">
+                        <input type="hidden" th:field="*{fotoEmpleado}" name="fotoEmpleado">
+                    </div>
+
+                    <div class="col-md-6 d-flex align-items-center justify-content-center">
+                        <div id="preview" class="border p-3" style="width: 250px; height: 250px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <img id="previewImg" src="" alt="Previsualización"
+                                style="max-width: 100%; max-height: 100%; display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 d-flex align-items-center">
+                    <label for="puestoEmpleado" class="form-label">Puesto</label>
+                    <select class="form-select me-2" id="puestoEmpleado" required>
+                    <option th:each="rol : ${listaRoles}"
+                            th:value="${rol.id}"
+                            th:text="${rol.tipo}"></option>
+                    </select>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" id="agregarPuesto">
+                        <i class="fas fa-plus"></i> Agregar puesto
+                    </button>
+                </div>
+
+                <div id="puestosLista" class="mt-3">
+                    <h4>Lista de Puestos</h4>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Puesto</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Guardar empleado</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 Cuco Corp. Todos los derechos reservados.</p>
+    </footer>
+
+<script th:inline="javascript">
+        let rolesSeleccionadosArray = [];
+        const rolesEmpleado = /*[[${rolesEmpleado}]]*/ []; // Obtén la lista de roles del empleado del modelo
+
+        window.addEventListener('scroll', function() {
+            const navbarHeight = document.querySelector('.navbar').offsetHeight;
+            document.querySelector('.admin-subheader').style.top = navbarHeight + 'px';
+        });
+
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const previewImg = document.getElementById('previewImg');
+                previewImg.src = reader.result;
+                previewImg.style.display = 'block';
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        
+        function mostrarToast(mensaje, tipo = 'warning') {
+            const toastContainer = document.getElementById('toastContainer');
+            if (toastContainer) {
+                const toast = document.createElement('div');
+                toast.classList.add('toast', 'fade', 'show', `bg-${tipo}`, 'text-white');
+                toast.setAttribute('role', 'alert');
+                toast.setAttribute('aria-live', 'assertive');
+                toast.setAttribute('aria-atomic', 'true');
+                toast.innerHTML = `
+                    <div class="toast-body">${mensaje}</div>
+                `;
+                toastContainer.appendChild(toast);
+
+                // Ocultar el toast después de unos segundos
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            } else {
+                console.warn('El contenedor de toasts con ID "toastContainer" no se encontró.');
+            }
+        }
+
+        //Función para agregar un puesto a la tabla
+        function agregarPuestoATabla(rolId, rolTipo) {
+            if (rolId && !rolesSeleccionadosArray.includes(rolId)) {
+                rolesSeleccionadosArray.push(rolId);
+                console.log('Roles seleccionados (array global):', rolesSeleccionadosArray);
+
+                const tbody = document.querySelector('#puestosLista tbody');
+                const newRow = tbody.insertRow();
+                newRow.dataset.rolId = rolId;
+
+                const cell1 = newRow.insertCell(0);
+                const cell2 = newRow.insertCell(1);
+                cell1.textContent = rolTipo;
+                cell2.innerHTML = '<button type="button" class="btn btn-sm btn-danger eliminarPuesto">X</button>';
+
+                cell2.querySelector('.eliminarPuesto').addEventListener('click', function() {
+                    const rowToRemove = this.closest('tr');
+                    const rolIdToRemove = rowToRemove.dataset.rolId;
+                    rolesSeleccionadosArray = rolesSeleccionadosArray.filter(id => id !== rolIdToRemove);
+                    console.log('Roles seleccionados (array global) después de eliminar:', rolesSeleccionadosArray);
+                    tbody.removeChild(rowToRemove);
+                });
+            } else if (rolId) {
+                mostrarToast(`El rol "${rolTipo}" ya ha sido seleccionado.`);
+            }
+        }
+
+        //Precargar los roles del empleado al cargar la página (si estamos en modo edición)
+        document.addEventListener('DOMContentLoaded', function() {
+            if (rolesEmpleado && rolesEmpleado.length > 0) {
+                rolesEmpleado.forEach(rol => {
+                    agregarPuestoATabla(rol.id, rol.tipo);
+                    // Inicializa el array global con los roles del empleado al cargar
+                    if (!rolesSeleccionadosArray.includes(rol.id)) {
+                        rolesSeleccionadosArray.push(rol.id);
+                    }
+                });
+                console.log('Roles seleccionados (array global) al cargar:', rolesSeleccionadosArray);
+            }
+        });
+
+        document.getElementById('agregarPuesto').addEventListener('click', function() {
+            const selectPuesto = document.getElementById('puestoEmpleado');
+            const nuevoPuestoId = parseInt(selectPuesto.value); 
+            const nuevoPuestoTexto = selectPuesto.options[selectPuesto.selectedIndex].textContent;
+
+            agregarPuestoATabla(nuevoPuestoId, nuevoPuestoTexto);
+            selectPuesto.selectedIndex = 0; // Deseleccionar la opción
+        });
+
+        document.querySelector('#puestosLista tbody').addEventListener('click', function(event) {
+            if (event.target.classList.contains('eliminarPuesto')) {
+                const rowToRemove = event.target.closest('tr');
+                const rolIdToRemove = parseInt(rowToRemove.dataset.rolId);
+
+                // Eliminar el ID del rol del array global
+                rolesSeleccionadosArray = rolesSeleccionadosArray.filter(id => id !== rolIdToRemove);
+                console.log('Roles seleccionados (array global) después de eliminar:', rolesSeleccionadosArray);
+
+                // Eliminar la fila de la tabla
+                rowToRemove.remove();
+            }
+        });
+
+        document.getElementById('empleadoForm').addEventListener('submit', function(event) {
+            console.log('Formulario enviado');
+            console.log('Roles seleccionados (array global) al enviar:', rolesSeleccionadosArray);
+
+            const existingRoleInputs = this.querySelectorAll('input[name="rolesSeleccionados[]"]');
+            existingRoleInputs.forEach(input => input.remove());
+
+            rolesSeleccionadosArray.forEach(rolId => {
+                const inputRolId = document.createElement('input');
+                inputRolId.type = 'hidden';
+                inputRolId.name = 'rolesSeleccionados[]';
+                inputRolId.value = rolId;
+                this.appendChild(inputRolId);
+                console.log('Campo oculto creado desde array global:', inputRolId);
+            });
+        });
+        
+        
+        
+document.addEventListener('DOMContentLoaded', function() {
+            const passwordContainer = document.querySelector('div:has(label[for="contrasenaCliente"])').parentNode; // Selecciona el div que contiene ambos campos de contraseña
+            const passwordInput = document.getElementById('contrasenaCliente');
+            const confirmPasswordInput = document.getElementById('confirmarContrasenaCliente');
+            const empleadoForm = document.getElementById('empleadoForm');
+            const actValue = /*[[${act}]]*/ 0; // Obtener el valor de 'act' de Thymeleaf
+
+            if (actValue === 1) {
+                if (passwordContainer) {
+                    passwordContainer.style.display = 'none';
+                }
+                if (passwordInput) {
+                    passwordInput.removeAttribute('required');
+                }
+                if (confirmPasswordInput) {
+                    confirmPasswordInput.removeAttribute('required');
+
+                    // Remover el listener de blur y la validación al enviar si existen
+                    confirmPasswordInput.removeEventListener('blur', verificarContrasenas);
+                    empleadoForm.removeEventListener('submit', prevenirEnvioSiContrasenasNoCoinciden);
+                }
+            } else {
+                // Agregar listeners y validaciones solo si act es 0
+                confirmPasswordInput.addEventListener('blur', verificarContrasenas);
+                empleadoForm.addEventListener('submit', prevenirEnvioSiContrasenasNoCoinciden);
+            }
+
+            function verificarContrasenas() {
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    confirmPasswordInput.classList.add('is-invalid');
+                    if (!document.getElementById('confirmPasswordError')) {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.id = 'confirmPasswordError';
+                        errorDiv.classList.add('invalid-feedback');
+                        errorDiv.textContent = 'Las contraseñas no coinciden.';
+                        confirmPasswordInput.parentNode.insertBefore(errorDiv, confirmPasswordInput.nextSibling);
+                    }
+                    return false;
+                } else {
+                    confirmPasswordInput.classList.remove('is-invalid');
+                    const errorDiv = document.getElementById('confirmPasswordError');
+                    if (errorDiv) {
+                        errorDiv.remove();
+                    }
+                    return true;
+                }
+            }
+
+            function prevenirEnvioSiContrasenasNoCoinciden(event) {
+                if (!verificarContrasenas()) {
+                    event.preventDefault(); // Evita que se envíe el formulario si las contraseñas no coinciden
+                }
+            }
+        });        
+        
+    </script>
+
+    <div id="toastContainer" style="position: fixed; top: 10px; right: 10px; z-index: 1050;"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/13c51e858e.js" crossorigin="anonymous"></script>    
+    
+    </body>
+    </html>
+    

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Reservas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/indexcss.css}"> 
+    <link rel="stylesheet" th:href="@{/css/indecssbody.css}"> 
+    <link rel="stylesheet" th:href="@{/css/cssAdmin.css}"> 
+    <link rel="stylesheet" th:href="@{/css/cssHoteles.css}">
+    <style>
+        .filter-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div th:insert="admin/fragment/headertop :: admin-cabecera-top" class="top-navbar bg-black text-white py-2">
+
+    </div>
+
+    <nav th:insert="admin/fragment/headerbottom :: admin-cabecera-bottom" class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  
+    </nav>
+
+
+    <div th:insert="admin/fragment/reservasub :: sub-reserva" class="admin-subheader">
+
+    </div>
+
+    <div class="container mt-4">
+        <h2 class="text-center">Historial de Reservas</h2>
+
+		<form method="post" th:action="@{/reserva/admin/filtrarReservasHistorial}">
+		
+			<input type="hidden" class="form-control" name="habitacionReserva" th:value="${habitacion.id}">
+		
+	        <div class="d-flex justify-content-center">
+	            <div style="max-width: 800px; width: 100%;">
+	                <div class="mb-3">
+	                    <label class="form-label me-2">Número de reserva:</label>
+	                    <div class="form-check form-check-inline">
+	                        <input class="form-check-input filter-checkbox" type="checkbox" data-target="numeroReserva" name="filtrarPorCodigoReserva" value="on">
+	                        <label class="form-check-label">Activar</label>
+	                    </div>
+	                    <input type="text" class="form-control filter-input" id="numeroReserva" placeholder="Número de reserva" name="codigoReserva" style="display: none;">
+	                </div>
+	                <hr>
+
+	                <div class="mb-3">
+	                    <label class="form-label me-2">Rango de Fechas (Fecha de Inicio):</label>
+	                    <div class="form-check form-check-inline">
+	                        <input class="form-check-input filter-checkbox" type="checkbox" data-target="rangoFechas" name="filtrarPorFecha" value="on">
+	                        <label class="form-check-label">Activar</label>
+	                    </div>
+	                    <div class="filter-input" id="rangoFechas" style="display: none;">
+	                        <div class="d-flex">
+	                            <input type="date" class="form-control me-2" id="fechaMin" name="fechaInicio">
+	                            <input type="date" class="form-control" id="fechaMax" name="fechaFin">
+	                        </div>
+	                    </div>
+	                </div>
+	                <hr>
+
+	                <div class="mb-3">
+	                    <label class="form-label me-2">Rango de precios:</label>
+	                    <div class="form-check form-check-inline">
+	                        <input class="form-check-input filter-checkbox" type="checkbox" data-target="rangoPrecios" name="filtrarPorPrecio" value="on">
+	                        <label class="form-check-label">Activar</label>
+	                    </div>
+	                    <div class="filter-input" id="rangoPrecios" style="display: none;">
+	                        <div class="d-flex">
+	                            <input type="number" class="form-control me-2" id="precioMin" placeholder="Precio mínimo" name="precioMinimo" step="0.01">
+	                            <input type="number" class="form-control" id="precioMax" placeholder="Precio máximo" name="precioMaximo" step="0.01">
+	                        </div>
+	                    </div>
+	                </div>
+	                <hr>
+
+	                <div class="mb-3">
+	                    <label class="form-label me-2">Nombre del Cliente:</label>
+	                    <div class="form-check form-check-inline">
+	                        <input class="form-check-input filter-checkbox" type="checkbox" data-target="nombreCliente" name="filtrarPorNombreCliente" value="on">
+	                        <label class="form-check-label">Activar</label>
+	                    </div>
+	                    <input type="text" class="form-control filter-input" id="nombreCliente" placeholder="Nombre del cliente" name="nombreCliente" style="display: none;">
+	                </div>
+	                <hr>
+
+	                <div class="text-center">
+	                    <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filtrar</button>
+	                    
+	                </div>
+	            </div>
+	        </div>
+        </form>
+
+ 
+
+        <table class="table hotel-table mt-4">
+            <thead class="hotel-thead">
+                <tr>
+                    <th>Número de reserva</th>
+                    <th>Fecha</th>
+                    <th>Hotel</th>
+                    <th>No. de habitación</th>
+                    <th>A nombre de</th>
+                    <th>Atendido por</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each = "reserva : ${listaReservas}">
+                    <td  th:text="${reserva.codigoReserva}">12345</td>
+                    <td th:text="${reserva.fechainicio}">2024-07-20</td>
+                    <td th:text="${reserva.idReservaHabitacion.idHotelHabitacion.nombre}">Hotel A</td>
+                    <td th:text="${reserva.idReservaHabitacion.numeroHabitacion}">Fulano</td>
+                    
+                    <td th:text="${reserva.idReservaCliente.nombre}">Fulano</td>
+                    
+                    <td th:if="${reserva.idReservaEmpleado == null}">No antendido</td>
+                    <td th:unless="${reserva.idReservaEmpleado == null}" th:text="${reserva.idReservaEmpleado.nombre}"></td>
+                    
+                    <td th:text="'$' + ${reserva.precioTotal}">$150.00</td>
+                    <td th:text="${reserva.estado}">Pendiente</td>
+                    <td>
+                        <a th:if="${reserva.estado == 'Reservado'}" th:href="@{/reserva/admin/atender/{id}(id=${reserva.id})}" class="btn btn-sm btn-warning">Atender</a>
+                        
+                        <div th:unless="${reserva.estado == 'Reservado'}">
+                        	<a th:if="${reserva.estado == 'Proceso'}" th:href="@{/reserva/admin/terminar/{id}(id=${reserva.id})}" class="btn btn-sm btn-danger">Terminar</a>
+                        	<a th:unless="${reserva.estado == 'Proceso'}" class="btn btn-sm btn-warninsg">Terminada</a>
+                        </div>
+                		
+                
+                		<br>
+                        <a th:href="@{/reserva/admin/ver/{id}(id=${reserva.id})}" class="btn btn-sm btn-primary" style="margin-top:5px;">Ver detalles</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 Cuco Corp. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+        window.addEventListener('scroll', function() {
+            const navbarHeight = document.querySelector('.navbar').offsetHeight;
+            document.querySelector('.admin-subheader').style.top = navbarHeight + 'px';
+        });
+
+        document.querySelectorAll('.filter-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const targetId = this.getAttribute('data-target');
+                const targetInput = document.getElementById(targetId);
+                targetInput.style.display = this.checked ? 'block' : 'none';
+            });
+        });
+
+        document.querySelectorAll('.admin-button').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.admin-button').forEach(btn => {
+                    btn.classList.remove('active-sort');
+                    btn.classList.add('btn-secondary');
+                });
+                this.classList.add('active-sort');
+                this.classList.remove('btn-secondary');
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/13c51e858e.js" crossorigin="anonymous"></script>
+</body>
+</html>

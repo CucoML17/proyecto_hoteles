@@ -1,31 +1,33 @@
 version: '3'
 
 services:
-  listasproductos_t2:
-    build: listasproductos_t2_bdinterna
+  proyectohoteles:
+    build: proyectohoteles
     mem_limit: 512m
     ports:
       - "8080:8080"
     environment:
-      DB_URL: jdbc:mysql://lista_produs:3306/tendspring5?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_URL: jdbc:mysql://proyecto_hoteles:3306/hotelesproyecto1?createDatabaseIfNotExist=true&serverTimezone=UTC
       DB_USER_NAME: root
       DB_PASSWORD: carlos12345678
     restart: always
     volumes:
-      - productos_imagenes_data:/app/imagenesTiendaSpring/productos
-      - categorias_imagenes_data:/app/imagenesTiendaSpring/categorias
+      - hoteles_imagenes_data:/app/imagenesHotel/hoteles
+      - habitaciones_imagenes_data:/app/imagenesHotel/habitaciones
+      - empleado_imagenes_data:/app/imagenesHotel/empleados
+      - cliente_imagenes_data:/app/imagenesHotel/clientes 
     depends_on:
-      lista_produs:
+      proyecto_hoteles:
         condition: service_healthy
 
-  lista_produs:
+  proyecto_hoteles:
     image: mysql:8.3.0
     ports:
       - "3308:3306"
     environment:
       MYSQL_ROOT_PASSWORD: carlos12345678
       MYSQL_PASSWORD: carlos12345678
-      MYSQL_DATABASE: tendspring5
+      MYSQL_DATABASE: hotelesproyecto1
     restart: always
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
@@ -33,7 +35,11 @@ services:
       retries: 10
 
 volumes:
-  productos_imagenes_data:
+  hoteles_imagenes_data:
     driver: local
-  categorias_imagenes_data:
+  habitaciones_imagenes_data:
     driver: local
+  empleado_imagenes_data:
+    driver: local
+  cliente_imagenes_data:
+    driver: local    

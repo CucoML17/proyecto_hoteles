@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Cliente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/indexcss.css}">
+    <link rel="stylesheet" th:href="@{/css/indecssbody.css}">
+    <link rel="stylesheet" th:href="@{/css/cssHoteles.css}">
+
+    <style>
+        .client-form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        #imagePreview img {
+            max-width: 150px;
+            display: none;
+        }
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-row .mb-3 {
+            width: 48%;
+        }
+        .is-invalid {
+            border-color: red;
+        }
+        .password-fields {
+            display: block; /* Mostrar por defecto para nuevo registro */
+        }
+    </style>
+</head>
+<body>
+
+    <div th:insert="user/fragment/headertop :: cabecera-top" class="top-navbar bg-black text-white py-2">
+
+    </div>
+
+    <nav th:insert="user/fragment/headerbottom :: cabecera-bottom" class="navbar navbar-expand-lg navbar-light bg-light sticky-top ">
+
+    </nav>
+
+    <div class="container mt-4">
+        <h2 class="text-center"  th:text="${accion}">Registro de Cliente</h2>
+
+		<div th:if="${errorUsername}" class="alert alert-danger">
+		    <p th:text="${errorUsername}"></p>
+		</div>
+
+        <div class="client-form-container">
+            <form id="clienteForm" method="post" th:action="@{/cliente/user/guardar}" th:object="${cliente}" enctype="multipart/form-data">
+
+                <div th:if="${#fields.hasErrors('*')}" class='alert alert-danger' role='alert'>
+                    Por favor corrija los siguientes errores:
+                    <ul>
+                        <li th:each="err : ${#fields.errors('*') }" th:text="${err}"/>
+                    </ul>
+                </div>
+
+
+                <input type="hidden" id="id" th:field="*{id}">
+
+
+                <input type="hidden" id="iduser" th:value="${usuario.id}" name="iduser">
+                <input type="hidden" th:value="${act}" name="act">
+
+
+                <div class="form-row">
+                    <div class="mb-3">
+                        <label for="nombreCliente" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombreCliente" th:field="*{nombre}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellidosCliente" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="apellidosCliente" th:field="*{apellido}" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="mb-3">
+                        <label for="telefonoCliente" class="form-label">Teléfono</label>
+                        <input type="tel" class="form-control" id="telefonoCliente" th:field="*{telefono}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailCliente" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="emailCliente" th:field="*{correo}" required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="direccionCliente" class="form-label">Dirección</label>
+                    <input type="text" class="form-control" id="direccionCliente" th:field="*{direccion}" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="mb-3">
+                        <label for="usuarioCliente" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="usuarioCliente" th:value="${usuario.username}" name="username" required>
+                    </div>
+                </div>
+
+                <div class="password-fields" th:if="${act == 0}">
+                    <div class="form-row">
+                        <div class="mb-3">
+                            <label for="contrasenaCliente" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="contrasenaCliente" name="password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmarContrasenaCliente" class="form-label">Confirmar Contraseña</label>
+                            <input type="password" class="form-control" id="confirmarContrasenaCliente" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3 d-flex align-items-center">
+                    <div class="col-md-6">
+                        <label for="imagenFile" class="form-label">Foto del usuario</label>
+                        <input type="file" class="form-control" id="imagenFile" name="imagenFile" accept="image/*"
+                               onchange="previewImage(event)">
+                        <input type="hidden" th:field="*{fotoCliente}" name="fotoCliente">
+                    </div>
+
+                    <div class="col-md-6 d-flex align-items-center justify-content-center">
+                        <div id="preview" class="border p-3" style="width: 250px; height: 250px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <img  th:src="@{'/imagenes/clientes/' + ${cliente.fotoCliente}}" id="previewImg" src="" alt="Previsualización"
+                                style="max-width: 100%; max-height: 100%; display: block;"> </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary" th:text="${act == 0 ? 'Registrarme como cliente' : 'Guardar Cambios'}">Registrarme como cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 Cuco Corp. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/13c51e858e.js" crossorigin="anonymous"></script>
+
+    <script  th:inline="javascript">
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const previewImg = document.getElementById('previewImg');
+                previewImg.src = reader.result;
+                previewImg.style.display = 'block';
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        document.getElementById('confirmarContrasenaCliente').addEventListener('blur', function() {
+            const contrasena = document.getElementById('contrasenaCliente').value;
+            const confirmarContrasena = this.value;
+
+            if (contrasena !== confirmarContrasena) {
+                this.classList.add('is-invalid');
+                const toast = new bootstrap.Toast(document.createElement('div'), {
+                    body: 'Las contraseñas no coinciden.',
+                    autohide: true,
+                    delay: 3000
+                });
+                toast.show();
+            } else {
+                this.classList.remove('is-invalid');
+            }
+        });
+
+        // Mostrar la imagen existente al cargar la página de edición
+        document.addEventListener('DOMContentLoaded', function() {
+            const previewImg = document.getElementById('previewImg');
+            if (previewImg.getAttribute('src') !== '') {
+                previewImg.style.display = 'block';
+            }
+
+            // Ocultar campos de contraseña si act es 1 (edición)
+            const passwordFields = document.querySelector('.password-fields');
+            const passwordInput = document.getElementById('contrasenaCliente');
+            const confirmPasswordInput = document.getElementById('confirmarContrasenaCliente');
+
+            const actValue = /*[[${act}]]*/ 0; // Obtener el valor de 'act' de Thymeleaf
+
+            if (actValue === 1) {
+                if (passwordFields) {
+                    passwordFields.style.display = 'none';
+                }
+                if (passwordInput) {
+                    passwordInput.removeAttribute('required'); // Opcional: quitar el atributo 'required'
+                }
+                if (confirmPasswordInput) {
+                    confirmPasswordInput.removeAttribute('required'); // Opcional: quitar el atributo 'required'
+                }
+            }
+        });
+    </script>
+</body>
+</html>

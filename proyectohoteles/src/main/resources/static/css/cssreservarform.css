@@ -1,0 +1,15 @@
+.reservation-form {
+    max-width: 800px; /* Ajusta el ancho máximo del formulario */
+    margin: 0 auto; /* Centra el formulario */
+}
+
+.profile-img-lg {
+    width: 80px; /* Aumenta el tamaño de las imágenes */
+    height: 80px;
+}
+
+.custom-thead {
+    background-color: #f0f0f0;
+}
+
+

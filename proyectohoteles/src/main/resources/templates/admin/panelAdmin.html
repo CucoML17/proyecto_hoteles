@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet"  th:href="@{/css/indexcss.css}">
+    <link rel="stylesheet"  th:href="@{/css/indecssbody.css}">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
+<body>
+
+    <div th:insert="admin/fragment/headertop :: admin-cabecera-top" class="top-navbar bg-black text-white py-2">
+    </div>
+
+    <nav th:insert="admin/fragment/headerbottom :: admin-cabecera-bottom" class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+    </nav>
+    
+		<div th:if="${mensajeAccesoDenegado}" class="alert alert-danger">
+		    <p th:text="${mensajeAccesoDenegado}"></p>
+		</div>    
+
+	<div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="bg-light border p-3">
+                    <div>
+                        <form th:action="@{/admin/dona/filtrarReservas}" method="post" class="mb-3">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <select class="form-select form-select-sm" name="hotelIdReserva">
+                                        <option value="">Todos los hoteles</option>
+                                        <option th:each="hotel : ${hoteles}" th:value="${hotel.id}" th:text="${hotel.nombre}"
+                                                th:selected="${hotel.id == hotelSeleccionadoReservaId}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary btn-sm">Filtrar Reservas</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <canvas id="reservasPorEstadoChart"></canvas>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="bg-light border p-3">
+                    <div>
+                        <form th:action="@{/admin/pastel/filtrarMantenimientos}" method="post" class="mb-3">
+                            <div class="row align-items-center">
+                                <div class="col-auto">
+                                    <select class="form-select form-select-sm" name="hotelIdMantenimiento">
+                                        <option value="">Todos los hoteles</option>
+                                        <option th:each="hotel : ${hoteles}" th:value="${hotel.id}" th:text="${hotel.nombre}"
+                                                th:selected="${hotel.id == hotelSeleccionadoMantenimientoId}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary btn-sm">Filtrar Mantenimientos</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <canvas id="mantenimientosPorEstadoChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="bg-light border p-3">
+                    <form th:action="@{/admin/fechas/filtrarReservasPorFecha}" method="post" class="mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <label for="fechaInicio" class="form-label">Fecha Inicio:</label>
+                                <input type="date" class="form-control form-control-sm" id="fechaInicio" name="fechaInicio" th:value="${fechaInicioDefault}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="fechaFin" class="form-label">Fecha Fin:</label>
+                                <input type="date" class="form-control form-control-sm" id="fechaFin" name="fechaFin" th:value="${fechaFinDefault}">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary btn-sm mt-4">Filtrar Rango</button>
+                            </div>
+                            <div class="col-12" th:if="${errorRangoFechas}" style="color: red;">
+                                <p th:text="${errorRangoFechas}"></p>
+                            </div>
+                        </div>
+                    </form>
+                    <canvas id="reservasPorDiaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2024 Cuco Corp. Todos los derechos reservados.</p>
+    </footer>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // Gráfico de Reservas por Estado (Dona)
+        var reservasPorEstado = /*[[${reservasPorEstado}]]*/ {};
+        var labelsReservas = Object.keys(reservasPorEstado);
+        var dataReservas = Object.values(reservasPorEstado);
+        var barColorsReservas = ["#b91d47", "#00aba9", "#2b5797", "#e8c3b9"];
+
+        new Chart("reservasPorEstadoChart", {
+            type: "doughnut",
+            data: {
+                labels: labelsReservas,
+                datasets: [{
+                    backgroundColor: barColorsReservas,
+                    data: dataReservas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Reservas Totales"
+                }
+            }
+        });
+
+        // Gráfico de Mantenimientos por Estado (Pastel)
+        var mantenimientosPorEstado = /*[[${mantenimientosPorEstado}]]*/ {};
+        var labelsMantenimientos = Object.keys(mantenimientosPorEstado);
+        var dataMantenimientos = Object.values(mantenimientosPorEstado);
+        var barColorsMantenimientos = ["#1e7145", "#f1c40f", "#3498db", "#9b59b6"];
+
+        new Chart("mantenimientosPorEstadoChart", {
+            type: "pie",
+            data: {
+                labels: labelsMantenimientos,
+                datasets: [{
+                    backgroundColor: barColorsMantenimientos,
+                    data: dataMantenimientos
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Mantenimientos Totales"
+                }
+            }
+        });
+
+        // Gráfico de Reservas por Día (Línea)
+        var reservasPorDia = /*[[${reservasPorDia}]]*/ {};
+        var labelsDias = Object.keys(reservasPorDia);
+        var dataCantidadReservas = Object.values(reservasPorDia);
+
+        new Chart("reservasPorDiaChart", {
+            type: "line",
+            data: {
+                labels: labelsDias,
+                datasets: [{
+                    backgroundColor: "rgba(0,0,255,0.2)",
+                    borderColor: "rgba(0,0,255,1)",
+                    data: dataCantidadReservas,
+                    label: 'Total de Reservas'
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: "Tendencia de Reservas por Día"
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            stepSize: 1 // Puedes ajustar el stepSize según tus datos
+                        }
+                    }]
+                }
+            }
+        });
+        /*]]>*/
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/13c51e858e.js" crossorigin="anonymous"></script>
+</body>
+</html>
