@@ -1,0 +1,93 @@
+    <nav th:fragment = "menu-principal" class="navbar navbar-expand-lg navbar-dark sticky-top">
+	    <style>
+	    
+			.btn-custom {
+			  background-color: #ff456a; /* Color de fondo */
+			  color: white; /* Color del texto */
+			  border: none; /* Sin borde */
+			  border-radius: 5px; /* Bordes redondeados */
+			  padding: 8px 16px; /* Espaciado interno */
+			  margin-left: 8px; /* Espacio entre botones */
+			}
+			
+			.btn-custom:hover {
+			  background-color: #c42142; /* Color de fondo al pasar el mouse */
+			}    
+	    </style>
+        <div class="container-fluid">
+            
+            <a th:href="@{/}" class="navbar-brand" href="#">
+                <img th:src="@{/images/logo_itch.png}"  alt="Logo">
+                <span class="title" id="titoso">Tienda Cuco</span>
+            </a>
+
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+					<li class="nav-item"  sec:authorize="isAuthenticated()">
+					    <span class="nav-link" style="font-size:18px">
+					        Usuario: <span th:text="${nombreUsuario}"></span>
+					        <br/>
+					        Rol(es): <span th:each="perfil : ${perfilesUsuario}" th:text="${perfil}" th:if="!perfilStat.first" th:prepend=", "></span><span th:each="perfil : ${perfilesUsuario}" th:text="${perfil}" th:if="${perfilStat.first}"></span>
+					    </span>
+					</li>    
+                
+					<li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">Menú</a>
+                    </li>
+                                     
+					 <li class="nav-item">
+                        <a class="nav-link" th:href="@{/producto/listaP}">Producto</a>
+                    </li>
+                                    
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/tabla}">Tabla de productos</a>
+                    </li>
+                    
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/categorias/mostrarInicio}">Categorías</a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/usuario/listaUsuarios}">Lista de usuarios</a>
+                    </li>
+                    
+					<li class="nav-item">
+                        <a class="nav-link" th:href="@{/vendedor/listaV}">Lista de vendedores</a>
+                    </li>
+                    
+					<li class="nav-item">
+                        <a class="nav-link" th:href="@{/cliente/listaC}">Lista de Clientes</a>
+                    </li>     
+
+					<li class="nav-item">
+                        <a class="nav-link" th:href="@{/venta/selecCliente}">Realizar compra</a>
+                    </li>
+                    
+					<li class="nav-item">
+                        <a class="nav-link" th:href="@{/venta/listaV}">Lista de ventas</a>
+                    </li>                                                                                 
+
+	                <li class="nav-item" sec:authorize="isAnonymous()">
+	                    <a th:href="@{/login}" class="nav-link btn btn-custom" >Ingresar</a>
+	                </li>
+	                <li class="nav-item" sec:authorize="isAnonymous()">
+	                    <a class="nav-link btn btn-custom" th:href="@{/registrarUsuario}">Registrar</a>
+	                </li>
+	                
+					<li class="nav-item"  sec:authorize="isAuthenticated()">
+					    <a class="nav-link btn btn-custom" th:href="@{/logout}">Salir</a>
+					</li>              
+                </ul>
+            </div>
+        </div>
+        <!-- Lo de recuperar el usuario -->
+
+    </nav>

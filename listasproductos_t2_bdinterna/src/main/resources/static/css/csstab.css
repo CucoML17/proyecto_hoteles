@@ -1,0 +1,93 @@
+ 
+        .navbar {
+            background-color: #960f1c; 
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+        .navbar-brand img {
+            max-height: 70px; 
+            margin-right: 10px; 
+        }
+        .navbar-brand .title {
+            color: white; 
+            font-size: 1.5rem; 
+            font-weight: bold; 
+        }
+        .navbar-nav .nav-link {
+            color: white !important; 
+            font-weight: 500; 
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffdab9 !important; 
+        }
+
+        .nav-item{
+            margin-left: 10px;
+            margin-right: 10px;
+
+        }
+
+        #titoso{
+            font-size: 28px;
+
+        }
+
+
+
+        /*Para la tabla del dolor*/
+        
+        .tablaProd-table {
+            width: 90%; 
+            margin: 0 auto; 
+            border-collapse: collapse;
+        }
+        .tablaProd-table thead {
+            background-color: #c42535; 
+            color: white; 
+        }
+        .tablaProd-table tbody tr:nth-child(odd) {
+            background-color: #f8f9fa; 
+        }
+        .tablaProd-table tbody tr:nth-child(even) {
+            background-color: #e9ecef; 
+        }
+        .tablaProd-table th, .tablaProd-table td {
+            padding: 12px; 
+            text-align: center; 
+            border: 1px solid #dee2e6; 
+        }
+        
+        .btn-info{
+        	
+        }
+        
+        
+        
+        
+        footer {
+            background-color: #dc3545; /* Color rojo */
+            color: white; /* Texto blanco */
+            padding: 20px 0; /* Espaciado interno */
+            margin-top: 40px; /* Margen superior para separar del contenido */
+        }
+        footer .footer-content {
+            text-align: center; /* Centrar el contenido */
+        }
+        footer .footer-content p {
+            margin: 5px 0; /* Espaciado entre párrafos */
+        }
+        footer .footer-content a {
+            color: #ffc107; /* Color amarillo para enlaces */
+            text-decoration: none; /* Sin subrayado */
+        }
+        footer .footer-content a:hover {
+            text-decoration: underline; /* Subrayado al hacer hover */
+        }      
+        
+        
+		.colorgris{
+			background-color: #d9d9d9;
+			
+		}

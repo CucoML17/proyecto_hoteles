@@ -1,0 +1,13 @@
+@charset "UTF-8";
+    
+    
+    .img-producto {
+        width: 100%; /* Ancho fijo */
+        
+        object-fit: cover; /* Ajusta la imagen sin deformarla */
+    }
+    
+    .card-personalizada {
+        max-width: 800px; /* Ancho máximo de la card */
+        margin: 0 auto; /* Centrar la card */
+    }    

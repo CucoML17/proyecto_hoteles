@@ -1,0 +1,226 @@
+//200 encontrar por precio entre
+//200 encontrar por precio entre y ordenado desc
+//231 mostrar productos por muchos estados coincidentes con IN
+//299 por rango de fechas
+//315 encontrar por el NOMBRE de la categoría
+//333 encontrar por una coincidencia final, como si fuera el LIKE
+
+
+
+
+//538 ordenar por precio ascendente, todas
+//588 PAGINACION DEL DOLOR
+//619 PAGINAR Y ORDENAR
+//673 RELACION DE MUCHOS A MUCHOS Y ENCONTRAR POR UN ID DEL OTRO LADO, vaya si la relacion es idProducto y idVendedor, entonces puedes buscar por el Producto o el Vendedor
+
+//986 un listado de id para encontrar en categorias, vaya el findAllBy
+
+
+
+
+1. Búsqueda Simple por Atributo:
+
+findBy<NombreDelAtributo>(TipoDato valor)
+Ejemplo: findByStatus(String status)
+
+2. Operadores Lógicos (And, Or):
+findBy<Atributo1>And<Atributo2>(TipoDato valor1, TipoDato valor2)
+Ejemplo: findByDestacadoAndStatus(int destacado, String status)
+findBy<Atributo1>Or<Atributo2>(TipoDato valor1, TipoDato valor2)
+Ejemplo: findByPrecioLessThanOrFechaPublicacionBefore(double precio, Date fecha)
+
+
+3. Comparadores:
+Igualdad:
+findBy<Atributo>(TipoDato valor) (implícito)
+findBy<Atributo>Is(TipoDato valor)
+findBy<Atributo>Equals(TipoDato valor)
+Ejemplo: findByNombre("Producto A")
+
+Desigualdad:
+findBy<Atributo>Not(TipoDato valor)
+findBy<Atributo>IsNot(TipoDato valor)
+Ejemplo: findByStatusNot("Inactivo")
+
+Mayor que:
+findBy<Atributo>GreaterThan(TipoDato valor)
+Ejemplo: findByPrecioGreaterThan(100.0)
+
+Mayor o igual que:
+findBy<Atributo>GreaterThanEqual(TipoDato valor)
+Ejemplo: findByStockGreaterThanEqual(5)
+
+Menor que:
+findBy<Atributo>LessThan(TipoDato valor)
+Ejemplo: findByDescuentoLessThan(0.10)
+
+Menor o igual que:
+findBy<Atributo>LessThanEqual(TipoDato valor)
+Ejemplo: findByFechaCreacionLessThanEqual(Date fechaLimite)
+
+Entre (rango):
+findBy<Atributo>Between(TipoDato valorInferior, TipoDato valorSuperior)
+Ejemplo: findByPrecioBetween(50.0, 150.0)
+
+
+4. Búsquedas de Texto (String) los LIKE Y ESO:
+Like (contiene):
+findBy<Atributo>Like(String patron) (%patron%)
+Ejemplo: findByNombreLike("%teclado%")
+NotLike (no contiene):
+findBy<Atributo>NotLike(String patron)
+Ejemplo: findByDescripcionNotLike("%oferta%")
+Comienza con:
+findBy<Atributo>StartingWith(String prefijo) (prefijo%)
+Ejemplo: findByCodigoStartingWith("PROD-")
+Termina con:
+findBy<Atributo>EndingWith(String sufijo) (%sufijo)
+Ejemplo: findByNombreEndingWith("-XL")
+Contiene (case-insensitive):
+findBy<Atributo>Containing(String parte) (%parte%, ignora mayúsculas/minúsculas)
+Ejemplo: findByEmailContainingIgnoreCase("gmail.com")
+Igual a (case-insensitive):
+findBy<Atributo>IgnoreCase(String valor)
+Ejemplo: findByMarcaIgnoreCase("apple")
+
+
+5. Búsquedas por Colecciones (In, NotIn):
+findBy<Atributo>In(Collection<TipoDato> valores)
+Ejemplo: findByStatusIn(List.of("Activo", "En Espera"))
+findBy<Atributo>NotIn(Collection<TipoDato> valores)
+Ejemplo: findByColorNotIn(List.of("Rojo", "Azul"))
+
+
+6. Búsquedas por Valores Nulos:
+findBy<Atributo>IsNull()
+Ejemplo: findByFechaActualizacionIsNull()
+findBy<Atributo>IsNotNull()
+Ejemplo: findByFechaVencimientoIsNotNull()
+
+
+7. Búsquedas Booleanas:
+findBy<Atributo>IsTrue() (para atributos de tipo boolean o Boolean)
+Ejemplo: findByEsVisibleIsTrue()
+findBy<Atributo>IsFalse()
+Ejemplo: findByPromocionActivaIsFalse()
+
+
+8. Ordenamiento:
+OrderBy<AtributoAOrdenar>Asc (ascendente, es el valor por defecto)
+Ejemplo: findByStatusOrderByPrecioAsc("Activo")
+OrderBy<AtributoAOrdenar>Desc (descendente)
+Ejemplo: findByCategoriaOrderByNombreDesc("Electrónicos")
+Se puede combinar con condiciones:
+findByDestacadoOrderByFechaPublicacionDesc(1)
+
+
+9. Búsqueda por Relaciones (atributos de otras entidades):
+findBy<NombreDeLaEntidadRelacionada>_<NombreDelAtributoDeLaEntidadRelacionada>(TipoDato valor)
+Ejemplo: Si Producto tiene una relación con Categoria (atributo categoria en Producto) y Categoria tiene un atributo nombre:
+findByCategoria_Nombre(String nombreCate)
+
+//PARA EL DISTINC
+List<Producto> findDistinctByStatus(String status);
+
+
+//PARA GUARDAR UN DETALLE DE ALGO, VAYA UN MUCHOS A MUCHOS COMO DELTALLE VENTA DEL DOLOR 180 DE ESTE DOCUMENTO
+
+		 if(opc==5) {
+			 
+			 double total = 0;
+			 
+			 //
+			 List<Cliente> listaCliente = clienteRepository.findAll();
+			 System.out.println("Ingrese el ID del cliente a realizar la compra:");
+			 
+		     for (Cliente c : listaCliente) {
+		           System.out.println("Id: "+ c.getId() + " | Nombre: " + c.getNombre());
+		     }		
+		     int idCliente = scanner.nextInt();		
+		     
+		     Cliente clienteCompra = clienteRepository.findById(idCliente).get();	
+		     
+		     //Elige el empleado que atiende
+			 List<Empleado> listaEmpleado = empleadoRepository.findAll();
+			 System.out.println("Ingrese el ID del empleado que atiende la compra:");
+			 
+		     for (Empleado e: listaEmpleado) {
+		           System.out.println("Id: "+ e.getId() + " | Nombre: " + e.getNombre());
+		     }		
+		     int idEmpleado = scanner.nextInt();		
+		     
+		     Empleado empleadoCompra = empleadoRepository.findById(idEmpleado).get();	
+		     
+		     
+		     Compra compra = new Compra();
+		     
+		     Compra compraTmp = compraRepository.save(compra);
+		     
+		     int idCompra = compraTmp.getId();
+		     
+		     //Qué producto va a comprar
+		     boolean seguirComprando = true;
+		     
+		     while(seguirComprando==true) {
+				 List<Producto> listaProductos = productoRepository.findAll();
+				 System.out.println("Ingrese el ID del producto a comprar:");
+				 
+			     for (Producto p : listaProductos) {
+			           System.out.println("Id: "+ p.getId() + " | Nombre: " + p.getNombreProducto()
+			           + " | Precio: " + p.getPrecio());
+			           
+			     }		
+			     int idProducto = scanner.nextInt();
+			     Producto productoComprado = productoRepository.findById(idProducto).get();
+			     
+			     System.out.println("Ingrese la cantidad a comprar:");
+			     int cantCompra = scanner.nextInt();
+			     
+			     
+			     //El guardado------------------------------------------------------------------------
+			     DetalleCompraId detalleCompraId = new DetalleCompraId(idCompra, idProducto);
+			     
+			     DetalleCompra detalleCompra = new DetalleCompra();
+			     detalleCompra.setId(detalleCompraId);
+			     detalleCompra.setDetalleCompraCompra(compraTmp);
+			     detalleCompra.setDetalleCompraProducto(productoComprado);
+			     
+			     detalleCompra.setCantidad(cantCompra);
+			     detalleCompra.setSubtotal(cantCompra * productoComprado.getPrecio());
+			     
+			     detalleCompraRepository.save(detalleCompra);
+			     
+			     
+			     total = total + cantCompra * productoComprado.getPrecio();
+			     
+			     System.out.println("¿Va a comprar otro producto?\n"
+			     		+ "1) Sí \n"
+			     		+ "2) No");
+			     
+			     int resCompra = scanner.nextInt();
+			     
+			     if(resCompra==1) {
+			    	 
+			    	 seguirComprando=true;
+			     }else {
+			    	 seguirComprando=false;
+			    	 
+			     }
+			     
+		    	 
+		     }
+		     
+		     
+		     
+		     //Finalización de la compra
+		     compraTmp.setIdCompraCliente(clienteCompra);
+		     compraTmp.setIdCompraEmpleado(empleadoCompra);
+		     compraTmp.setFechaCompra(new Date());
+		     compraTmp.setTotal(total);
+		     
+		     compraRepository.save(compraTmp);
+		     
+			 
+			 
+			 
+		 }	

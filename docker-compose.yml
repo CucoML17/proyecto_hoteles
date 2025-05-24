@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  listasproductos_t2:
+    build: listasproductos_t2_bdinterna
+    mem_limit: 512m
+    ports:
+      - "8080:8080"
+    environment:
+      DB_URL: jdbc:mysql://lista_produs:3306/tendspring5?createDatabaseIfNotExist=true&serverTimezone=UTC
+      DB_USER_NAME: root
+      DB_PASSWORD: carlos12345678
+    restart: always
+    volumes:
+      - productos_imagenes_data:/app/imagenesTiendaSpring/productos
+      - categorias_imagenes_data:/app/imagenesTiendaSpring/categorias
+    depends_on:
+      lista_produs:
+        condition: service_healthy
+
+  lista_produs:
+    image: mysql:8.3.0
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: carlos12345678
+      MYSQL_PASSWORD: carlos12345678
+      MYSQL_DATABASE: tendspring5
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+
+volumes:
+  productos_imagenes_data:
+    driver: local
+  categorias_imagenes_data:
+    driver: local

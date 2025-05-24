@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrando usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/csstab.css}">
+    <link rel="stylesheet" th:href="@{/css/cateform.css}">
+    <link rel="stylesheet" th:href="@{/css/agPcss.css}">
+</head>
+<body>
+
+<nav th:insert="fragments/header :: menu-principal" class="sticky-top"></nav>
+
+<div class="container mt-4 morepequeno">
+    <form class="padoso" method="post" th:action="@{/guardarUsuario}" th:object="${usuario}">
+        <div th:if="${#fields.hasErrors('*')}" class='alert alert-danger' role='alert'>
+            Por favor corrija los siguientes errores:
+            <ul>
+                <li th:each="err : ${#fields.errors('*') }" th:text="${err}"/>
+            </ul>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" th:field="*{nombre}" name="nombre">
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="email" th:field="*{email}" name="email">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" th:field="*{username}" name="username">
+            </div>
+            <div class="col-md-6">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" th:field="*{password}" name="password">
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-danger">Registrar</button>
+    </form>
+</div>
+
+    <footer th:insert="fragments/footer :: footer-f">
+		
+    </footer>  
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

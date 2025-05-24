@@ -1,0 +1,44 @@
+@charset "UTF-8";
+
+.form-container {
+    max-width: 600px; 
+    margin: 0 auto; 
+    padding: 20px;
+    background-color: #f8f9fa; 
+    border-radius: 8px; 
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #dc3545; 
+}
+.form-container .form-control:disabled {
+    background-color: #e9ecef; 
+}
+.form-container .btn-cancel {
+    background-color: #a7a7a7; 
+    border-color: #a7a7a7;
+}
+.form-container .btn-cancel:hover {
+    background-color: #5a6268; 
+    border-color: #545b62;
+}
+.form-container .btn-add {
+    background-color: #ff8591; 
+    border-color: #ff8591;
+}
+.form-container .btn-add:hover {
+    background-color: #c82333; 
+    border-color: #bd2130;
+}
+
+.formId{
+    max-width: 50%;
+
+}
+
+.form-control{
+    border-color: #7a7a7a;
+
+}

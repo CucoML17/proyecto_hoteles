@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Menú principal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/csstab.css}">
+    <style>
+    .img-producto {
+        width: 150px; /* Ancho fijo */
+        height: 150px; /* Altura fija */
+        object-fit: contain; /* Ajusta la imagen sin cortarla */
+       	padding-top: 20px;
+    }
+    .img-container {
+        width: 150px; /* Ancho fijo */
+        height: 150px; /* Altura fija */
+        overflow: hidden; /* Oculta cualquier desbordamiento */
+        display: flex;
+        align-items: center; /* Centra verticalmente */
+        justify-content: center; /* Centra horizontalmente */
+    }
+    
+    .redux_busca{
+    	max-width: 800px;
+    }
+    </style>
+</head>
+<body>
+
+    
+    <nav th:insert="fragments/header :: menu-principal" class="sticky-top">
+ 
+    </nav>
+
+		<div th:if="${mensajeExitoUsuario}" class="alert alert-primary" role="alert">
+		    <span th:utext="${mensajeExitoUsuario}"></span>
+		</div>
+			
+	    <div th:if="${mensajeSalida}" class="alert alert-info" role="alert">
+	        <span th:text="${mensajeSalida}"></span>
+	    </div>
+	    
+		<div th:if="${mensajeAccesoDenegado}" class="alert alert-danger">
+		    <p th:text="${mensajeAccesoDenegado}"></p>
+		</div>	    
+        
+	<div class="container mt-4 redux_busca">
+	
+	
+	    <h3>Encuentra los productos que andas buscando</h3>
+	    <h5 class="text-muted mb-4">Puedes buscar por categoría o por nombre</h5>
+	
+	    <form th:action="@{/buscar}" method="post">
+	        <div class="row align-items-center">
+	            <div class="col-md-6 mb-3">
+	                <input type="text" class="form-control" name="busquedaProd" placeholder="Buscar por producto">
+	            </div>
+	            <div class="col-md-4 mb-3">
+	                <select class="form-select" name="busquedaCate">
+	                    <option th:value="0">Seleccione categoría</option>
+				        <option th:each="categoria : ${listaC}"
+				                th:value="${categoria.id}" 
+				                th:text="${categoria.nombre}"></option>
+	                </select>
+	            </div>
+	            <div class="col-md-2 mb-3">
+	                <button type="submit" class="btn btn-danger w-100">Buscar</button>
+	            </div>
+	        </div>
+	    </form>
+		<div th:if="${mensajeExito}" class="alert alert-primary" role="alert">
+		    <span th:utext="${mensajeExito}"></span>
+		</div>	    
+	</div>
+    
+	<div class="container mt-4">
+	    <div class="row justify-content-center" th:each = "producto : ${productoP}"> <!-- Centrar la fila -->
+	        <!-- Carta de producto -->
+	        <div class="col-md-8 col-lg-6 mb-4"> <!-- Ancho reducido y centrado -->
+	            <div class="card">
+	                <div class="row g-0">
+	                    <!-- Parte izquierda: Imagen -->
+						
+						<div class="col-md-4 img-container">
+						    <img th:src="@{'/imagenesProdu/' + ${producto.imagen}}" class="img-fluid rounded-start img-producto" alt="Imagen del producto">
+						</div>                    
+	                    
+	                    <!-- Parte derecha: Información del producto -->
+	                    <div class="col-md-8">
+	                        <div class="card-body">
+	                            <h3 class="card-title" th:text="${producto.nombre}">Nombre del producto</h3>
+	                            
+						<p th:if="${producto.categoria != null}" th:text="'Categoría: '+${producto.categoria.nombre}"></p>
+						<p th:unless="${producto.categoria != null}">Sin categoría</p>
+						
+							                            
+	                            
+	                            <p class="card-text" th:text="'Publicación: ' + ${producto.fechaPublicacion}">Fecha de publicación</p>
+	                            <a th:href="@{/producto/ver/{id}(id=${producto.id})}" class="btn btn-info">Ver más</a>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	</div>	
+
+    <footer th:insert="fragments/footer :: footer-f">
+		
+    </footer>    
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

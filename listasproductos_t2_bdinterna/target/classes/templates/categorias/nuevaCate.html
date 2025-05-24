@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Agregando categoría</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/csstab.css}">
+    <link rel="stylesheet" th:href="@{/css/cateform.css}">
+    
+</head>
+<body>
+
+    
+    <nav th:insert="fragments/header :: menu-principal">
+ 
+    </nav>
+    
+    <div class="container mt-4">
+        <div class="form-container">
+            <h2>Agregar nueva categoría para los productos</h2>
+            <form th:action="@{/categorias/saveC}" method="post">
+                <!-- Campo ID Categoría (no editable) -->
+                <div class="mb-3">
+                    <label for="idCategoria" class="form-label">ID Categoría</label>
+                    <input type="text" class="form-control formId" id="idCategoria" name="idCategoria"  disabled>
+                </div>
+
+                <!-- Campo Nombre de la categoría -->
+                <div class="mb-3">
+                    <label for="nombreCategoria" class="form-label">Nombre de la categoría</label>
+                    <input type="text" class="form-control" id="nombreCategoria" name="nombreCategoria" placeholder="Ingrese el nombre de la categoría" required>
+                </div>
+
+                <!-- Campo Descripción -->
+                <div class="mb-3">
+                    <label for="descripcionCategoria" class="form-label">Descripción</label>
+                    <textarea class="form-control" id="descripcionCategoria" name="descripcionCategoria" rows="4" placeholder="Ingrese una descripción" required></textarea>
+                </div>
+
+                <!-- Botones -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" class="btn btn-cancel me-md-2">Cancelar</button>
+                    <button type="submit" class="btn btn-add">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p><strong>Nombre del Estudiante:</strong> Mejía López Carlos Abel</p>
+                <p><strong>Institución:</strong> Instituto Tecnológico de Chilpancingo</p>
+                <p><strong>Correo:</strong> <a href="mailto:tucorreo@example.com">L21520390@chilpancingo.tecnm.mx</a></p>
+            </div>
+        </div>
+    </footer> 
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+@charset "UTF-8";
+.morepequeno{
+	max-width: 900px; 
+	background-color: #ededed;
+	border-radius: 10px;	
+}
+
+.padoso {
+	padding: 10px;
+	
+	
+}
