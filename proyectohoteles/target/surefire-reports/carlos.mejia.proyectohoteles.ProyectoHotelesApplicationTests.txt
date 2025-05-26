@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: carlos.mejia.proyectohoteles.ProyectoHotelesApplicationTests
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 19.56 s -- in carlos.mejia.proyectohoteles.ProyectoHotelesApplicationTests
